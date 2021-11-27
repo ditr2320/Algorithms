@@ -1,0 +1,462 @@
+\documentclass[11pt]{article} 
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos, color=orange!50]{todonotes}
+\usepackage{hyperref}
+\usepackage[numbers, square]{natbib}
+\usepackage{fancybox}
+\usepackage{epsfig}
+\usepackage{soul}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage[version=4]{mhchem}
+\usepackage{multicol}
+\usepackage{forest}
+\usepackage{mathtools}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[numbers]{natbib}
+\usepackage{subfiles}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{cor}{Corollary}[prop]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{definition}
+\newtheorem{required}{Problem}
+\newtheorem*{requiredHC}{Problem HC}
+
+\theoremstyle{definition}
+\newtheorem{ex}{Example}
+
+\newcommand{\interval}[4]{\draw (#2, #1) -- (#3, #1); % Usage: \interval{height}{start}{end}{label}
+\draw (#2, #1-0.11) -- (#2, #1+0.11); % draw left whisker
+\draw (#3, #1-0.11) -- (#3, #1+0.11); % draw right whisker
+\node[] at (#2-0.25, #1) {#4};
+}
+
+
+\setlength{\marginparwidth}{3.4cm}
+%#########################################################
+
+%To use symbols for footnotes
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+%To change footnotes back to numbers uncomment the following line
+%\renewcommand*{\thefootnote}{\arabic{footnote}}
+
+% Enable this command to adjust line spacing for inline math equations.
+% \everymath{\displaystyle}
+
+% _______ _____ _______ _      ______ 
+%|__   __|_   _|__   __| |    |  ____|
+%   | |    | |    | |  | |    | |__   
+%   | |    | |    | |  | |    |  __|  
+%   | |   _| |_   | |  | |____| |____ 
+%   |_|  |_____|  |_|  |______|______|
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{
+\normalfont \normalsize 
+\textsc{CSCI 3104 Fall 2021 \\ 
+Profs Josh Grochow and Bo Waggoner} \\
+[10pt] 
+\rule{\linewidth}{0.5pt} \\[6pt] 
+\huge Problem Set 5 \\
+\rule{\linewidth}{2pt}  \\[10pt]
+}
+%\author{Your Name}
+\date{}
+
+\begin{document}
+\definecolor {processblue}{cmyk}{0.96,0,0,0}
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%FILL IN YOUR NAME%%%%%%%
+%%%%%%%%%%AND STUDENT ID%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\noindent
+Due Date \dotfill TODO \\
+Name \dotfill \textbf{Didi Trifonova} \\
+Student ID \dotfill \textbf{109388776} \\
+Collaborators \dotfill \textbf{List Your Collaborators Here}
+
+\tableofcontents
+
+\section*{Instructions}
+\addcontentsline{toc}{section}{Instructions}
+ \begin{itemize}
+	\item The solutions \textbf{must be typed}, using proper mathematical notation. We cannot accept hand-written solutions. Useful links and references on \LaTeX can be found \href{https://canvas.colorado.edu/courses/75824/pages/latex}{here on Canvas}.
+	\item You should submit your work through the \textbf{class Canvas page} only. Please submit one PDF file, compiled using this \LaTeX \ template.
+	\item You may not need a full page for your solutions; pagebreaks are there to help Gradescope automatically find where each problem is. Even if you do not attempt every problem, please submit this document with no fewer pages than the blank template (or Gradescope has issues with it).
+
+	\item You are welcome and encouraged to collaborate with your classmates, as well as consult outside resources. You must \textbf{cite your sources in this document.} \textbf{Copying from any source is an Honor Code violation. Furthermore, all submissions must be in your own words and reflect your understanding of the material.} If there is any confusion about this policy, it is your responsibility to clarify before the due date. 
+
+	\item Posting to \textbf{any} service including, but not limited to Chegg, Reddit, StackExchange, etc., for help on an assignment is a violation of the Honor Code.
+
+	\item You \textbf{must} virtually sign the Honor Code (see Section \hyperlink{HonorCode}{Honor Code}). Failure to do so will result in your assignment not being graded.
+\end{itemize}
+
+
+\section*{Honor Code (Make Sure to Virtually Sign the Honor Pledge)} 
+\addcontentsline{toc}{section}{Honor Code (Make Sure to Virtually Sign the Honor Pledge)}
+\hypertarget{HonorCode}{}
+
+\begin{requiredHC}
+On my honor, my submission reflects the following:
+\begin{itemize}
+\item My submission is in my own words and reflects my understanding of the material.
+\item Any collaborations and external sources have been clearly cited in this document.
+\item I have not posted to external services including, but not limited to Chegg, Reddit, StackExchange, etc.
+\item I have neither copied nor provided others solutions they can copy.
+\end{itemize}
+
+\noindent In the specified region below, clearly indicate that you have upheld the Honor Code. Then type your name. 
+\end{requiredHC}
+
+\begin{proof}[Honor Pledge] $ $\\
+I have upheld the honor code - Didi Trifonova
+\end{proof}
+
+
+\newpage
+
+\section{Standard 12- Asymptotics I (Calculus I techniques)}
+\begin{required}
+For each part, you will be given a list of functions. Your goal is to order the functions from \textbf{slowest growing} to \textbf{fastest growing}. That is, if your answer is $f_{1}(n), \ldots, f_{k}(n)$, then it should be the case that $f_{i}(n) \in O(f_{i+1}(n))$ for all $i$. If two adjacent functions have the same order of growth (that is, $f_{i}(n) \in \Theta(f_{i+1}(n))$), clearly specify this. \textbf{Show all work, including Calculus details.} Plugging into WolframAlpha is not sufficient. \\
+
+\noindent You may find the following helpful.
+\begin{itemize}
+\item Recall that our asymptotic relations are transitive. So if $f(n) \in O(g(n))$ and $g(n) \in O(h(n))$, then $f(n) \in O(h(n))$. The same applies for little-o, Big-Theta, etc. Note that the goal is to order the growth rates, so transitivity is very helpful. We encourage you to make use of transitivity rather than comparing all possible pairs of functions, as using transitivity will make your life easier.
+
+\item You may also use the Limit Comparison Test. However, you \textbf{MUST} show all limit computations at the same level of detail as in Calculus I-II. Should you choose to use Calculus tools, whether you use them correctly will count towards your score.
+
+\item You may \textbf{NOT} use heuristic arguments, such as comparing degrees of polynomials or identifying the ``high order term" in the function.
+
+\item If it is the case that $g(n) = c \cdot f(n)$ for some constant $c$, you may conclude that $f(n) = \Theta(g(n))$ without using Calculus tools. You must clearly identify the constant $c$ (with any supporting work necessary to identify the constant- such as exponent or logarithm rules) and include a sentence to justify your reasoning. 
+\end{itemize}
+
+
+\noindent You may also find it helpful to order the functions using an \texttt{itemize} block, with the work following the end of the \texttt{itemize} block.
+\begin{itemize}
+\item This function grows the slowest: $f_{1}(n)$
+\item These functions grow at the same asymptotic rate and faster than $f_{1}(n)$: $f_{2}(n), f_{3}(n), \ldots$
+\item These functions grow at the same asymptotic rate, but faster than $f_{2}(n)$: $f_{k}(n)$.
+\end{itemize}
+
+
+\noindent \\ Also below is an example of an \texttt{align} block to help you organize your work.
+\begin{align*}
+\lim_{n \to \infty} \frac{n^{2}}{2^{n}} &= \lim_{n \to \infty} \frac{2n}{\ln(2) \cdot 2^{n}} \\
+&= \lim_{n \to \infty} \frac{2}{(\ln(2))^{2} \cdot 2^{n}} \\
+&= 0.
+\end{align*}
+\newpage
+\begin{enumerate} [label=(\alph*)]
+\subsection{Problem 1\ref{1a}}
+    \item \label{1a} $ n^2+20n$,\qquad  $ n^2-100$, \qquad $n^3-10n^2$,\qquad  $n^2\sqrt{n}$.
+    \begin{proof}[Answer] $ $ 
+    \begin{itemize}
+        \item  $f(n) = n^2 + 20n$ and $g(n) = n^2-100 $
+        \begin{align*}
+            \lim_{n \to \infty} \frac{n^2+20n}{n^{2}-100} \\
+            \lim_{n \to \infty} \frac{2n+20}{2n}  \\
+            \lim_{n \to \infty} \frac{2}{2}= 1 \\
+        \end{align*}
+        Therefore, $f=\Theta(g)$
+        \item  $f(n) = n^2 + 20n$ and $g(n) = n^2\sqrt{n} $
+        \begin{align*}
+            \lim_{n \to \infty} \frac{n^2+20n}{n^{2}\sqrt{n}} \\
+            \lim_{n \to \infty} \frac{n^2+20n}{n^{\frac{5}{2}}} \\
+            \lim_{n \to \infty} \frac{2n+20}{\frac{5}{2}n^{\frac{3}{2}}} \\
+            \lim_{n \to \infty} \frac{2}{\frac{15}{4}n^{\frac{1}{2}}} = 0
+        \end{align*}
+        Therefore, $f=O(g)$
+        \item $f(n) = n^3-10n^2 $ and $g(n) = n^2\sqrt{n} $
+        \begin{align*}
+        \lim_{n \to \infty} \frac{n^3-10n^2}{n^{2}\sqrt{n}} \\
+        \lim_{n \to \infty} \frac{n^3-10n^2}{n^{\frac{5}{2}}} \\
+        \lim_{n \to \infty} \frac{3n^2-20n}{\frac{5}{2}n^{\frac{3}{2}}} \\
+        \lim_{n \to \infty} \frac{6n-20}{\frac{15}{4}n^{\frac{1}{2}}}\\
+        \lim_{n \to \infty} \frac{6}{\frac{15}{8}n^{\frac{-1}{2}}} = \infty
+        \end{align*}
+        Therefore, $f=\Omega(g)$
+    \end{itemize}
+    \begin{itemize}
+    \item These functions grow at the same asymptotic rate and the slowest: $f(n) = n^2+20n$ and $f(n) = n^2-100$
+    \item This function grows faster: $f(n) = n^2\sqrt{n}$
+    \item This function grows the fastest: $f(n) = n^3 -10n^2$
+    \end{itemize}
+
+    \end{proof}
+        
+    \newpage
+\subsection{Problem 1\ref{1b}}
+    \item \label{1b} $ (\log_4 n)^2 $, \qquad $10 \log_3 n$, \qquad $\log_2 n^2$, \qquad $n^{1/1000}$.
+    
+    \emph{Hint:} Recall change of logarithmic base formula $\log_a x = \log_b x\cdot\log_a b$
+    \begin{proof}[Answer] $ $ \\
+    \begin{itemize}
+        \item  $f(n) = (\log_4 n)^2$ and $g(n) =10 \log_3 n $
+        \begin{align*}
+        \lim_{n \to \infty} \frac{(\log_4 n)^2}{10 \log_3 n} \\ \\
+        \frac{d}{dx}(\log_4 n)^2 = \frac{2log_4n}{ln(4)n} = \frac{log_4n}{ln(2)n} \\
+        \frac{d}{dx}(10 \log_3 n) = \frac{10}{ln(3)n} \\ \\
+        \lim_{n \to \infty} \frac{\frac{log_4n}{ln(2)n}}{\frac{10}{ln(3)n}} \\ \\
+        \lim_{n \to \infty} \frac{log_4n \cdot ln(3)}{10ln(2)} = \infty
+        \end{align*}
+        Therefore, $f=\Omega(g)$
+        \item $f(n) = (\log_4 n)^2$ and $g(n) = log_2n^2 $
+        \begin{align*}
+        \lim_{n \to \infty} \frac{(\log_4 n)^2}{log_2n^2} \\ \\
+        \lim_{n \to \infty} \frac{\frac{log_4n}{ln(2)n}}{\frac{2}{ln(2)n}} \\ \\
+         \lim_{n \to \infty}\frac{log_4n}{2} = \infty
+        \end{align*}
+        Therefore, $f=\Omega(g)$
+        \item $f(n) = (\log_4 n)^2$ and $g(n) = n ^ {(1/1000)}$
+        \begin{align*}
+             \lim_{n \to \infty} \frac{(\log_4 n)^2}{n ^ {(1/1000)}}  \\ \\
+             \lim_{n \to \infty} \frac{(\log_4 n)/ln(2)n}{1/1000 n ^ {(999/1000)}} \\ \\\
+             \frac{1000}{ln(2)}\lim_{n \to \infty} \frac{log_4n}{n^{-1/1000}} \\
+             \frac{-1}{2(ln(2))^2}\lim_{n \to \infty} \frac{n^{-1}}{n^{1001/1000}} \\
+             \frac{-1}{2(ln(2))^2} \lim_{n \to \infty} n^{-2001/1000}  \\
+             \frac{-1}{2(ln(2))^2}\lim_{n \to \infty} \frac{1}{n^{2.001}}= 0 \\
+        \end{align*}
+        Therefore, $f=O(g)$
+        \item $f(n) = 10log_3n$ and $g(n) = log_2n^2$
+        \begin{align*}
+            \lim_{n \to \infty} \frac{10log_3n}{log_2n^2} \\ \\
+             \lim_{n \to \infty} \frac{10/ln(3)n}{\frac{1}{ln(2)}\frac{1}{n^2}2n} \\ \\
+             \lim_{n \to \infty} \frac{10/ln(3)n}{2/ln(2)n} = \frac{5ln(2)}{ln(3)}\\ \\
+        \end{align*}
+        Therefore, $f = \Theta (g)$
+    \end{itemize}
+    \begin{itemize}
+    \item These functions grow at the same asymptotic rate and the slowest:  $f(n) = 10log_3n$ and $f(n) = log_2n^2$
+    \item This function grows faster: $f(n) = (\log_4 n)^2$
+    \item This function grows the fastest: $f(n) = n ^ {(1/1000)}$
+    \end{itemize}
+    \end{proof}
+\end{enumerate}
+
+\end{required}
+
+\newpage
+\section{Standard 13- Asymptotics II (Calculus II techniques): }
+\begin{required}
+
+
+
+    {\itshape For each of the following questions, put the growth rates in order, from slowest-growing to fastest. That is, if your answer is $f_1(n), f_2(n), \dotsc, f_k(n)$, then $f_i(n) \leq O(f_{i+1}(n))$ for all $i$. If two adjacent ones are asymptotically the same (that is, $f_i(n) = \Theta(f_{i+1}(n))$), you must specify this as well. 
+    Justify your answer (show your work). You may assume transitivity: if $f(n) \leq O(g(n))$ and $g(n) \leq O(h(n))$, then $f(n) \leq O(h(n))$, and similarly for little-oh, etc. The same instructions as for Problem 1 apply.}
+    \begin{enumerate}[label=(\alph*)]
+\subsection{Problem 2\ref{2a}}
+        \item \label{2a} $n^{\log_5 n}$, \qquad $4$ ,\qquad $n^{\log_3 n}$,\qquad  $n^{\log_n(n^2)}$, \qquad $ n^{\log_n 5}$ .
+        \begin{proof}[Answer] $ $\\
+        \begin{itemize}
+        \item $f(n) = n^{\log_3 n}$ and $g(n) = n^{\log_5 n}$ 
+        \begin{align*}
+             \lim_{n \to \infty} \frac{n^{\log_3 n}}{n^{\log_5 n}} \\
+              \lim_{n \to \infty} n^{log_3n - log_5n} \\
+              \lim_{n \to \infty} n^{\frac{log_5n}{log_53} - log_5n}\\
+              \lim_{n \to \infty} n^{\frac{log_5n}{log_53} - \frac{log_5n \cdot log_53}{log_53}} \\
+              \lim_{n \to \infty} n^{\frac{log_5n - log_5n \cdot log_53}{log_53}} \\
+              \lim_{n \to \infty} n^{\frac{log_5n (1-log_53)}{log_53}} = \infty 
+        \end{align*}
+        Therefore, $f=\Omega(g)$ 
+        \item $f(n) = n^{\log_5 n}$ and $g(n) = n^{\log_n n^2} = n^2$
+        \begin{align*}
+            \lim_{n \to \infty} \frac{n^{log_5n}}{n^2} \\
+             \lim_{n \to \infty} n^{log_5n-2} = \infty\\ 
+        \end{align*}
+        Therefore, $f=\Omega(g)$ 
+         \item $f(n) = 4$ and $g(n) = n^{\log_n n^2} = n^2$
+         \begin{align*}
+             \lim_{n \to \infty} \frac{4}{n^2} = 0
+         \end{align*}
+         Therefore, $f=O(g)$ 
+         \item $f(n) = 4$ and $g(n) = n^{\log_n 5} = 5$
+         \begin{align*}
+            \lim_{n \to \infty} \frac{4}{5} = 4/5
+         \end{align*}
+         Therefore, $f=\Theta(g)$ 
+        \end{itemize}
+        \begin{itemize}
+            \item These functions grow at the same asymptotic rate and the slowest:  $4$ and $n^{log_n5}$
+            \item This function grows faster than the previous: $f(n) = n^{log_n(n^2)}$
+            \item This function grows faster than the previous: $f(n) = n^{log_5n}$
+            \item This function grows the fastest: $f(n) = n^{log_3n}$
+    \end{itemize}
+        \end{proof}
+        \newpage
+
+\subsection{Problem 2\ref{2b}}
+        \item \label{2b} $n!$ , \qquad $2^n$ ,\qquad  $2^{n/3}$, \qquad  $n^n$,\qquad $2^{n-2}$,\qquad  $\sqrt{n^{2n+1}}$. (\emph{Hint:} Recall \href{https://en.wikipedia.org/wiki/Stirling\%27s_approximation}{Stirling's approximation}, which says that $n! \sim \left(\frac{n}{e}\right)^n \sqrt{2 \pi n}$, i.e. $\lim_{n \to \infty} \frac{n!}{\left(\frac{n}{e}\right)^n \sqrt{2 \pi n}} = 1$.).
+        \begin{proof}[Answer]
+        \begin{itemize}
+            \item $f(n) = n!$ and $g(n) = 2^n$ using the ratio test: 
+            \begin{align*}
+                L  &= \frac{\frac{(n+1)!}{2^{n+1}}}{\frac{n!}{2^n}} \\
+                L &= \frac{(n+1)!}{2^{n+1}} \cdot \frac{2^n}{n!} \\
+                L &= \frac{2n}{2^{n+1}} \cdot \frac{(n+1)!}{n!} \\
+                L &= 2^{-1} \cdot \frac{n!(n+1)}{n!} \\
+                L &=\frac{1}{2} \cdot (n+1) \\
+                \lim_{n \to \infty} L = \infty
+            \end{align*}
+            Therefore, $f=\Omega (g)$
+            \item  $f(n) = n^n$ and $g(n) = n!$
+            \begin{align*}
+                L &= \frac{(n+1)^{n+1}}{(n+1)!} \cdot \frac{n!}{n^n} \\
+                L &= \frac{1}{n+1} \cdot \frac{(n+1)^n(n+1)}{n^n} \\
+                L &= \frac{(n+1)^n}{n^n} \\
+                L &= \left(\frac{n+1}{n}\right)^n \\
+                L &= \left(1+\frac{1}{n}\right)^n \\
+               \lim_{n \to \infty} L = e > 1 
+            \end{align*}
+            Therefore, $f=\Omega (g)$
+            \item $f(n) = \sqrt{n^{2n+1}} = n^{n+\frac{1}{2}}$ and $g(n) = n^n$
+            \begin{align*}
+                \lim_{n \to \infty} \frac{n^{n+\frac{1}{2}}}{n^n} \\
+                 \lim_{n \to \infty} \frac{n^n \cdot \sqrt{n}}{n^n} \\
+                 \lim_{n \to \infty} \sqrt{n} = \infty  
+            \end{align*}
+            Therefore, $f=\Omega(g)$ 
+            \item $f(n) = 2^n$ and $g(n) = 2^{n-2}$
+            \begin{align*}
+                \lim_{n \to \infty} \frac{2^n}{2^{n-2}} \\
+                 \lim_{n \to \infty} \frac{2^n}{2^n \cdot 2^-2} = 4 \\
+            \end{align*}
+            Therefore, $f=\Theta(g)$
+            \item $f(n) = 2^n$ and $g(n) = 2^{n/3}$
+            \begin{align*}
+                 \lim_{n \to \infty} \frac{2^n}{2^{n/3}} \\
+                 \lim_{n \to \infty} \left(\frac{2}{2^{1/3}}\right)^n = \infty 
+            \end{align*}
+            Therefore, $f = \Omega(g)$
+        \end{itemize}
+            \begin{itemize}
+            \item This function grows the slowest: $2^{n/3}$
+            \item These functions grow faster than the previous and at the same asymptotic rate: $2^n$ and $2^{n-2}$
+            \item This function grows faster than the previous: $n!$
+            \item This function grows faster than the previous $n^n$
+            \item This function grows the fastest: $\sqrt{n^{2n+1}}$
+            \end{itemize}
+        \end{proof}
+\end{enumerate}
+
+\end{required}
+
+\newpage
+\section{Standard 14- Analyzing Code I: (Independent nested loops)}
+\begin{required}
+
+
+Analyze the \textit{worst-case} runtime of the following algorithms. Clearly derive the runtime complexity function $T(n)$ for this algorithm, and then find a tight asymptotic bound for $T(n)$ (that is, find a function $f(n)$ such that $T(n) \in \Theta(f(n))$). Avoid heuristic arguments from 2270/2824 such as multiplying the complexities of nested loops.
+
+
+
+\begin{algorithm}
+\caption{Nested Algorithm 1}\label{alg:Nested2}
+\begin{algorithmic}[1]
+\Procedure{Foo2}{$\text{Integer } n$}
+\For{$i \gets 1; i \leq n; i \gets 2*i $}
+	\For{$j \gets 1; j \leq n; j \gets 2*j$}
+		\State \textbf{print} \text{``Hi"}
+	\EndFor
+\EndFor
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\begin{proof}[Answer] $ $ \\
+
+\begin{itemize}
+    \item Initializing the inner loop at line 3: 1 
+    \item Inner loop \\
+    - $log_2n$ iterations \\
+    - comparison on line 3: 1 \\
+    - updating j (multiplying by 2 and assigning) on line 3: 2 \\
+    - printing Hi on line 4: 1 \\
+    - Total for inner loop: $4log_2n$ 
+    \item Initializing the outer loop at line 2: 1 
+    \item Outer loop \\
+    - $log_2n$ iterations \\
+    - Comparison on line 2: 1 \\
+    - Updating i (multiplying by 2 and assigning) on line 2: 2 \\
+    - Total for outer loop: $3log_2n$ 
+    \item $T(n) = 2 + 4log_2n \cdot 3log_2n$
+    \item $T(n) = 2 + 12log^2_2n$ \\ 
+    \item $\lim_{n \to \infty} \frac{2 + 12log^2_2n}{log^2_2n} = 12$ \\ 
+    \item Therefore, $f = \Theta(log^2_2n)$
+\end{itemize}
+
+\end{proof}
+\end{required}
+
+\newpage
+\section{Standard 15- Analyzing Code II: (Dependent nested loops)}
+\begin{required}
+
+
+Analyze the \textit{worst-case} runtime of the following algorithms. Clearly derive the runtime complexity function $T(n)$ for this algorithm, and then find a tight asymptotic bound for $T(n)$ (that is, find a function $f(n)$ such that $T(n) \in \Theta(f(n))$). Avoid heuristic arguments from 2270/2824 such as multiplying the complexities of nested loops.
+
+
+\begin{algorithm}
+\caption{Nested Algorithm 2}\label{alg:NestedDependent1}
+\begin{algorithmic}[1]
+\Procedure{Boo1}{$\text{Integer } n$}
+\For{$i \gets 1; i \leq 2n; i \gets i+1$}
+	\For{$j \gets 1; j \leq i; j \gets j + 1$}
+		\State \textbf{print} \text{``Hi"}
+	\EndFor
+\EndFor
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\end{required}
+
+\begin{proof}[Answer] $ $ \\
+\begin{itemize}
+    \item Initializing the inner loop at line 3 : 1
+    \item Inner loop \\
+    - i iterations \\
+    - comparison on line 3: 1 \\
+    - updating j on line 3 : 2 \\
+    - printing on line 4 : 1  \\
+    - Total for inner loop: 1+4i
+    \item Initializing the outer loop line 2: 1 
+    \item Outer loop \\
+    - 2n iterations \\
+    - comparison on line 2: 1 \\
+    - updating i on line 2: 2 \\
+    - total for outer loop: 6n 
+    \begin{align*}
+        T(n) &= 2 + 6\sum_{i=1}^{n} (1+4i) \\
+         T(n) &= 2 + 6\sum_{i=1}^{n}1 + 6\sum_{i=1}^{n}4i \\
+         T(n) &= 2 + 6n + \frac{24n(n+1)}{2} \\
+          T(n) &= 12n^2 + 6n +14 \\
+          \lim_{n \to \infty} \frac{(12n^2+6n+14)}{n^2} &= \lim_{n \to \infty} \frac{(24n + 6)}{2n}  = \lim_{n \to \infty} \frac{24}{2} = 12
+    \end{align*}
+    \item Therefore, $f = \Theta(n^2)$
+\end{itemize}
+\end{proof}
+
+\end{document} % NOTHING AFTER THIS LINE IS PART OF THE DOCUMENT

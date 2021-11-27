@@ -1,0 +1,322 @@
+\documentclass[11pt]{article} 
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{graphicx}
+%\usepackage[siunitx]{circuitikz}
+\usepackage{tikz}
+\usepackage[colorinlistoftodos, color=orange!50]{todonotes}
+\usepackage{hyperref}
+\usepackage[numbers, square]{natbib}
+\usepackage{fancybox}
+\usepackage{epsfig}
+\usepackage{soul}
+\usepackage[framemethod=tikz]{mdframed}
+\usetikzlibrary{positioning, automata, backgrounds}
+\usepackage[shortlabels]{enumitem}
+\usepackage[version=4]{mhchem}
+\usepackage{multicol}
+\usepackage{forest}
+\usepackage{mathtools}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[numbers]{natbib}
+\usepackage{subfiles}
+%\usepackage{tkz-berge}
+
+
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{cor}{Corollary}[prop]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{definition}
+\newtheorem{required}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{ex}{Example}
+
+
+\newcommand{\interval}[4]{\draw (#2, #1) -- (#3, #1); % Usage: \interval{height}{start}{end}{label}
+\draw (#2, #1-0.11) -- (#2, #1+0.11); % draw left whisker
+\draw (#3, #1-0.11) -- (#3, #1+0.11); % draw right whisker
+\node[] at (#2-0.25, #1) {#4};
+}
+
+\setlength{\marginparwidth}{3.4cm}
+%#########################################################
+
+%To use symbols for footnotes
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+%To change footnotes back to numbers uncomment the following line
+%\renewcommand*{\thefootnote}{\arabic{footnote}}
+
+% Enable this command to adjust line spacing for inline math equations.
+% \everymath{\displaystyle}
+
+% _______ _____ _______ _      ______ 
+%|__   __|_   _|__   __| |    |  ____|
+%   | |    | |    | |  | |    | |__   
+%   | |    | |    | |  | |    |  __|  
+%   | |   _| |_   | |  | |____| |____ 
+%   |_|  |_____|  |_|  |______|______|
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{
+\normalfont \normalsize 
+\textsc{CSCI 3104 Fall 2021 \\ 
+Instructor: Profs. Grochow and Waggoner} \\
+[10pt] 
+\rule{\linewidth}{0.5pt} \\[6pt] 
+\huge Problem Set 3 \\
+\rule{\linewidth}{2pt}  \\[10pt]
+}
+%\author{Your Name}
+\date{}
+
+\begin{document}
+\definecolor {processblue}{cmyk}{0.96,0,0,0}
+\definecolor{processred}{rgb}{200, 0, 0}
+\definecolor{processgreen}{rgb}{0, 255, 0}
+\DeclareGraphicsExtensions{.png}
+\DeclareGraphicsExtensions{.gif}
+\DeclareGraphicsExtensions{.jpg}
+
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%FILL IN YOUR NAME%%%%%%%
+%%%%%%%%%%AND STUDENT ID%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\noindent
+Due Date \dotfill \textbf{September 21, 2021} \\
+Name \dotfill \textbf{Your Name} \\
+Student ID \dotfill \textbf{Your Student ID} \\
+Collaborators \dotfill \textbf{List Your Collaborators Here}
+
+\tableofcontents
+
+\section{Instructions}
+ \begin{itemize}
+	\item The solutions \textbf{must be typed}, using proper mathematical notation. We cannot accept hand-written solutions. \href{http://ece.uprm.edu/~caceros/latex/introduction.pdf}{Here's a short intro to \LaTeX.}
+	\item You should submit your work through the \textbf{class Canvas page} only. Please submit one PDF file, compiled using this \LaTeX \ template.
+	\item You may not need a full page for your solutions; pagebreaks are there to help Gradescope automatically find where each problem is. Even if you do not attempt every problem, please submit this document with no fewer pages than the blank template (or Gradescope has issues with it).
+
+	\item You are welcome and encouraged to collaborate with your classmates, as well as consult outside resources. You must \textbf{cite your sources in this document.} \textbf{Copying from any source is an Honor Code violation. Furthermore, all submissions must be in your own words and reflect your understanding of the material.} If there is any confusion about this policy, it is your responsibility to clarify before the due date. 
+
+	\item Posting to \textbf{any} service including, but not limited to Chegg, Reddit, StackExchange, etc., for help on an assignment is a violation of the Honor Code.
+
+	\item You \textbf{must} virtually sign the Honor Code (see Section \ref{HonorCode}). Failure to do so will result in your assignment not being graded.
+\end{itemize}
+
+
+\section{Honor Code (Make Sure to Virtually Sign)} \label{HonorCode}
+
+\begin{required}
+\begin{itemize}
+\item My submission is in my own words and reflects my understanding of the material.
+\item Any collaborations and external sources have been clearly cited in this document.
+\item I have not posted to external services including, but not limited to Chegg, Reddit, StackExchange, etc.
+\item I have neither copied nor provided others solutions they can copy.
+\end{itemize}
+
+%\noindent In the specified region below, clearly indicate that you have upheld the Honor Code. Then type your name. 
+\end{required}
+
+\begin{proof}[Agreed (Didi Trifonova)]
+\end{proof}
+
+
+
+\newpage
+\section{Standard 6 - MST: safe and useless edges}
+
+\begin{required}
+Consider the weighted graph $G(V, E, w)$ below. Let $\mathcal{F} = \{ \{A, B\}, \{A, G\}, \{E, F\}\}$ be an intermediate spanning forest (indicated by the thick edges below). Label each edge that is \textbf {not} in $\mathcal{F}$ as safe, useless, or undecided. Provide a 1-2 sentence explanation for each such edge.
+
+
+\begin{center}
+\begin{tikzpicture}[scale=0.4, auto, node distance=3cm, every loop/.style={},
+  thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+
+\node[main node] (A) {A};
+\node[main node] (B) [right of=A] {B};
+\node[main node] (C) [above right of=B] {C};
+\node[main node] (D) [below right of=C] {D};
+\node[main node] (E) [below left of=D] {E};
+\node[main node] (F) [below left of=E] {F};
+\node[main node] (G) [above left of=F] {G};
+
+\path[line width=0.25mm, every node/.style={font=\sffamily\small}]
+(B) edge node [left]  {5} (C)
+(B) edge node [left]  {8}  (E)
+(C) edge node [right] {3}  (D)
+(D) edge node [right] {23} (E)
+(F) edge node [below] {12} (G)
+(G) edge node [left]  {11} (B)
+(G) edge node [above] {12}  (E)
+;
+
+\draw[line width=0.75mm] (A) -- node [above] {4} (B);
+\draw[line width=0.75mm] (E) -- node [below] {5} (F);
+\draw[line width=0.75mm] (A) -- node [left] {9} (G);
+\end{tikzpicture}
+\end{center}
+\end{required}
+
+\begin{proof}[Answer] $ $ 
+\begin{verbatim}
+    Component 1: A,B,G
+    Component 2: E,F
+
+         5 (BC) -> Safe because it is the smallest weight edge leaving component 1.
+         8 (BE) -> Safe because it is the smallest weight edge leaving component 2. 
+        11 (GB) -> This edge is useless because adding it creates a cycle. 
+         3 (CD) -> This edge is undecided because it is neither useless nor light. 
+        12 (GE) -> This edge is undecided because it is neither useless nor light. 
+        12 (GF) -> This edge is undecided because it is neither useless nor light. 
+        23 (DE) -> This edge is undecided because it is neither useless nor light. 
+             
+            
+\end{verbatim}
+\end{proof}
+
+ 
+\newpage
+\section{Standard 7- Kruskal's Algorithm}
+
+\begin{required}
+Consider the weighted graph $G(V, E, w)$ below. Clearly list the order in which Kruskal's algorithm adds edges to a minimum-weight spanning tree for $G$. Additionally, clearly articulate the steps that Kruskal's algorithm takes as it selects the first \textbf{three} edges.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.4, auto, node distance=3cm, every loop/.style={},
+  thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+
+\node[main node] (A) {A};
+\node[main node] (B) [right of=A] {B};
+\node[main node] (C) [above right of=B] {C};
+\node[main node] (D) [below right of=C] {D};
+\node[main node] (E) [below left of=D] {E};
+\node[main node] (F) [below left of=E] {F};
+\node[main node] (G) [above left of=F] {G};
+
+\path[line width=0.25mm, every node/.style={font=\sffamily\small}]
+(B) edge node [left]  {16} (C)
+(B) edge node [left]  {8}  (E)
+(C) edge node [right] {3}  (D)
+(D) edge node [right] {23} (E)
+(F) edge node [below] {12} (G)
+(G) edge node [left]  {11} (B)
+(G) edge node [above] {12}  (E)
+(A) edge node [above] {4} (B)
+(E) edge node [below] {5} (F)
+(A) edge node [left] {9} (G)
+;
+\end{tikzpicture}
+\end{center}
+\end{required}
+
+
+\begin{proof}[Answer]$ $
+\begin{verbatim}
+- Sort edges from least cost to most
+    CD(3), AB(4), FE(5), BE(8), AG(9), GB(11), GE(12), FG(12), BC(16), DE(23) 
+
+- For each edge, starting with the lowest weight, determine if it is useless or not. If it is
+not then add to the graph. Useless is defined as an edge that will create a cycle if added to
+the graph. 
+
+Starting with the beginning of the sorted list: 
+1. First add CD to the graph since it is not useless (does not create cycle)
+2. Add AB because is it not useless 
+3. Add FE because it is not useless
+4. Add BE because it is not useless
+5. Add AG because it is not useless
+6. Do not add GB because it will create a cycle and is therefore useless
+7. Do not add GE because it is useless
+8. Do not add FG because it is useless
+9. Add BC because it is not useless
+10. Do not add DE because it is useless
+
+Order of edges added: CD, AB, FE, BE, AG, BC
+
+
+\end{verbatim}
+\end{proof}
+
+
+
+\newpage
+\section{Standard 8- Prim's Algorithm}
+
+\begin{required}
+Consider the weighted graph $G(V, E, w)$ below. Clearly list the order in which Prim's algorithm, \textbf{using the source vertex} $A$, adds edges to a minimum-weight spanning tree for $G$. Additionally, clearly articulate the steps that Prim's algorithm takes as it selects the first \textbf{three} edges.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.4, auto, node distance=3cm, every loop/.style={},
+  thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+
+\node[main node] (A) {A};
+\node[main node] (B) [right of=A] {B};
+\node[main node] (C) [above right of=B] {C};
+\node[main node] (D) [below right of=C] {D};
+\node[main node] (E) [below left of=D] {E};
+\node[main node] (F) [below left of=E] {F};
+\node[main node] (G) [above left of=F] {G};
+
+\path[line width=0.25mm, every node/.style={font=\sffamily\small}]
+(B) edge node [left]  {16} (C)
+(B) edge node [left]  {8}  (E)
+(C) edge node [right] {3}  (D)
+(D) edge node [right] {23} (E)
+(F) edge node [below] {12} (G)
+(G) edge node [left]  {11} (B)
+(G) edge node [above] {12}  (E)
+(A) edge node [above] {4} (B)
+(E) edge node [below] {5} (F)
+(A) edge node [left] {9} (G)
+;
+\end{tikzpicture}
+\end{center}
+\end{required}
+
+
+\begin{proof}[Answer]$ $
+\begin{verbatim}
+Beginning with source Vertex A:
+    Add a light edge from A to the MST
+        AB(4) is the lowest weight edge leaving vertex A
+    Add a light edge from the component containing A and B
+        BE(8) is the lowest weight edge leaving the component
+    Add a light edge from the component containing A,B, and E
+        EF(5) is the lowest weight edge leaving the component
+    Add a light edge from the component containing A,B,E,F
+        AG(9) is the lowest weight edge leaving the component
+    Add a light edge from the component containing A,B,E,F,G
+        BC(16) is the lowest weight edge leaving the component
+    Add a light edge from the component containing A,B,E,F,G,C
+        CD(3) is the lowest weight edge leaving the component
+    All the vertices are included in the component, thus the MST is solved. 
+    
+    Order of edges added: AB, BE, EF, AG, BC, CD
+    
+\end{verbatim}
+\end{proof}
+\end{document} % NOTHING AFTER THIS LINE IS PART OF THE DOCUMENT
+
+
+

@@ -1,0 +1,537 @@
+\documentclass[11pt]{article} 
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{graphicx}
+%\usepackage[siunitx]{circuitikz}
+\usepackage{tikz}
+%\usepackage{tkz-berge}
+%\usetikzlibrary{positioning, automata, backgrounds}
+\usepackage[colorinlistoftodos, color=orange!50]{todonotes}
+\usepackage{hyperref}
+\usepackage[numbers, square]{natbib}
+\usepackage{fancybox}
+\usepackage{epsfig}
+\usepackage{soul}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage[version=4]{mhchem}
+\usepackage{multicol}
+\usepackage{forest}
+\usepackage{mathtools}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[numbers]{natbib}
+\usepackage{subfiles}
+%\usepackage{tkz-berge}
+
+
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{cor}{Corollary}[prop]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{definition}
+\newtheorem{required}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{ex}{Example}
+
+\newcommand{\interval}[4]{\draw (#2, #1) -- (#3, #1); % Usage: \interval{height}{start}{end}{label}
+\draw (#2, #1-0.11) -- (#2, #1+0.11); % draw left whisker
+\draw (#3, #1-0.11) -- (#3, #1+0.11); % draw right whisker
+\node[] at (#2-0.25, #1) {#4};
+}
+
+
+\setlength{\marginparwidth}{3.4cm}
+%#########################################################
+
+%To use symbols for footnotes
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+%To change footnotes back to numbers uncomment the following line
+%\renewcommand*{\thefootnote}{\arabic{footnote}}
+
+% Enable this command to adjust line spacing for inline math equations.
+% \everymath{\displaystyle}
+
+% _______ _____ _______ _      ______ 
+%|__   __|_   _|__   __| |    |  ____|
+%   | |    | |    | |  | |    | |__   
+%   | |    | |    | |  | |    |  __|  
+%   | |   _| |_   | |  | |____| |____ 
+%   |_|  |_____|  |_|  |______|______|
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{
+\normalfont \normalsize 
+\textsc{CSCI 3104 Fall 2021 \\ 
+Instructors: Profs. Grochow and Waggoner} \\
+[10pt] 
+\rule{\linewidth}{0.5pt} \\[6pt] 
+\huge Problem Set 4 \\
+\rule{\linewidth}{2pt}  \\[10pt]
+}
+%\author{Your Name}
+\date{}
+
+\begin{document}
+\definecolor {processblue}{cmyk}{0.96,0,0,0}
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%FILL IN YOUR NAME%%%%%%%
+%%%%%%%%%%AND STUDENT ID%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\noindent
+Due Date \dotfill September 28, 2021 \\
+Name \dotfill \textbf{Didi Trifonova} \\
+Student ID \dotfill \textbf{109388776} 
+
+\tableofcontents
+
+\section{Instructions}
+ \begin{itemize}
+	\item The solutions \textbf{must be typed}, using proper mathematical notation. We cannot accept hand-written solutions. \href{http://ece.uprm.edu/~caceros/latex/introduction.pdf}{Here's a short intro to \LaTeX.}
+	\item You should submit your work through the \textbf{class Canvas page} only. Please submit one PDF file, compiled using this \LaTeX \ template.
+	\item You may not need a full page for your solutions; pagebreaks are there to help Gradescope automatically find where each problem is. Even if you do not attempt every problem, please submit this document with no fewer pages than the blank template (or Gradescope has issues with it).
+
+	\item You are welcome and encouraged to collaborate with your classmates, as well as consult outside resources. You must \textbf{cite your sources in this document.} \textbf{Copying from any source is an Honor Code violation. Furthermore, all submissions must be in your own words and reflect your understanding of the material.} If there is any confusion about this policy, it is your responsibility to clarify before the due date. 
+
+	\item Posting to \textbf{any} service including, but not limited to Chegg, Reddit, StackExchange, etc., for help on an assignment is a violation of the Honor Code.
+
+	\item You \textbf{must} virtually sign the Honor Code (see Section \ref{HonorCode}). Failure to do so will result in your assignment not being graded.
+\end{itemize}
+
+
+\section{Honor Code (Make Sure to Virtually Sign)} \label{HonorCode}
+
+\begin{required}
+\begin{itemize}
+\item My submission is in my own words and reflects my understanding of the material.
+\item Any collaborations and external sources have been clearly cited in this document.
+\item I have not posted to external services including, but not limited to Chegg, Reddit, StackExchange, etc.
+\item I have neither copied nor provided others solutions they can copy.
+\end{itemize}
+
+%\noindent In the specified region below, clearly indicate that you have upheld the Honor Code. Then type your name. 
+\end{required}
+
+\begin{proof}[Agreed (Didi Trifonova).]
+\end{proof}
+
+
+
+
+\newpage
+\section{Standard 9- Network Flows: Terminology}
+
+\begin{required}
+Consider the following flow network, with the following flow configuration $f$ as indicated below. 
+\begin{center}
+	\begin {tikzpicture}[-latex ,auto ,node distance =2 cm and 3cm ,on grid ,
+	semithick ,
+	state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+	draw,processblue , text=blue , minimum width =1 cm}]
+
+	\node[state] (A) {$s$};
+	\node[state] (B) [above right = of A] {$B$};
+	\node[state] (C) [below right = of A] {$C$};
+	\node[state] (D) [right = of B] {$D$};
+	\node[state] (E) [right = of C] {$E$};
+	\node[state] (F) [below right = of D] {$t$};
+	
+	\path (A) edge node[above] {$1 / 7$} (B);
+	\path (A) edge node[above] {$3 / 6$} (C);
+	\path (B) edge node[left] {$0 / 1$} (C);
+	\path (B) edge node[above] {$3 / 4$} (D);
+	\path (E) edge node[right] {$2 /  5$} (B);
+	\path (C) edge node[above] {$3 / 9$} (E);
+	\path (E) edge node[right] {$0 / 3$} (D);
+	\path (D) edge node[above] {$3 / 10$} (F);
+	\path (E) edge node[above] {$1 / 2$} (F);
+	
+	\end{tikzpicture}  
+\end{center}
+
+\noindent Do the following.
+\begin{enumerate}[label=(\alph*)]
+\item Given the current flow configuration $f$, what is the maximum \textit{additional} amount of flow that we can push across the edge $(B, D)$ from $B \to D$? Justify using 1-2 sentences.
+
+\begin{proof}[Answer]
+1 additional unit of flow can be pushed across the edge (B,D). This is because the capacity of the edge is 4 units and there are 3 units already being pushed. 
+\end{proof}
+
+
+\vskip 10pt
+\item Given the current flow configuration $f$, what is the maximum amount of flow that $B$ can push backwards to $E$? Do \textbf{not} consider whether $E$ can reroute that flow elsewhere; just whether $B$ can push flow backwards. Justify using 1-2 sentences.
+
+\begin{proof}[Answer]
+The maximum amount of flow that $B$ can push backwards to $E$ is 2. This is the amount that can be pushed without decreasing $f(B,E)$ below 0.
+\end{proof}
+
+
+
+\vskip 10pt
+\item Given the current flow configuration $f$, what is the maximum amount of flow that $D$ can push backwards to $E$? Do \textbf{not} consider whether $D$ can reroute that flow elsewhere; just whether $E$ can push flow backwards. Justify using 1-2 sentences.
+
+\begin{proof}[Answer]
+$D$ cannot push anything backwards to $E$ because doing so would result in $f(D,E) < 0$
+\end{proof}
+
+
+\vskip 10pt
+\item How much \textit{additional} flow can be pushed along the flow-augmenting path $s \to B \to E \to t$? Do not include the current flow along these edges. Justify using 1-2 sentences.
+
+\begin{proof}[Answer]
+There can be 1 additional unit of flow pushed along the path $s \to B \to E \to t$. This is because in the current configuration, the edge $(E,t)$ has a flow of 1 and a capacity of 2, which only leaves room for one additional unit. 
+\end{proof}
+
+
+\vskip 10pt
+\item Find a second flow-augmenting path and indicate the maximum amount of additional flow that can be pushed along the path. Assume that the flow-augmenting path from part (d) has \textbf{not} been applied. Justify using 1-2 sentences.
+
+\begin{proof}[Answer]
+Consider the path $s \to C \to E \to D \to t$. In this scenario, 3 additional units can be pushed without having a flow that exceeds a capacity. Anything greater than 3 would increase the flow of the edge $(E,D)$ past the capacity. 
+\end{proof}
+\end{enumerate}
+\end{required}
+
+
+
+\newpage
+\section{Standard 10- Network Flows: Ford-Fulkerson}
+
+\begin{required}
+Consider the following flow network, with no initial flow along the graph.
+\begin{center}
+	\begin {tikzpicture}[-latex ,auto ,node distance =2 cm and 3cm ,on grid ,
+	semithick ,
+	state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+	draw,processblue , text=blue , minimum width =1 cm}]
+
+	\node[state] (A) {$s$};
+	\node[state] (B) [above right = of A] {$B$};
+	\node[state] (C) [below right = of A] {$C$};
+	\node[state] (D) [right = of B] {$D$};
+	\node[state] (E) [right = of C] {$E$};
+	\node[state] (F) [below right = of D] {$t$};
+	
+	\path (A) edge node[above] {$0 / 7$} (B);
+	\path (A) edge node[above] {$0 / 6$} (C);
+	\path (B) edge node[left] {$0 / 1$} (C);
+	\path (B) edge node[above] {$0 / 4$} (D);
+	\path (E) edge node[right] {$0 /  5$} (B);
+	\path (C) edge node[above] {$0 / 9$} (E);
+	\path (E) edge node[right] {$0 / 3$} (D);
+	\path (D) edge node[above] {$0 / 10$} (F);
+	\path (E) edge node[above] {$0 / 2$} (F);
+	
+	\end{tikzpicture}  
+\end{center}
+
+
+\noindent Do the following.
+\begin{enumerate}[label=(\alph*)]
+\subsection{Problem 3\ref{3a}}
+\item Consider the flow-augmenting path $s \to B \to D \to t$. Push as much flow through the flow-augmenting path and draw the updated flow network below. \label{3a}
+
+\begin{proof}[Answer] $ $\\
+\begin{center}
+	\begin {tikzpicture}[-latex ,auto ,node distance =2 cm and 3cm ,on grid ,
+	semithick ,
+	state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+	draw,processblue , text=blue , minimum width =1 cm}]
+
+	\node[state] (A) {$s$};
+	\node[state] (B) [above right = of A] {$B$};
+	\node[state] (C) [below right = of A] {$C$};
+	\node[state] (D) [right = of B] {$D$};
+	\node[state] (E) [right = of C] {$E$};
+	\node[state] (F) [below right = of D] {$t$};
+	
+	\path (A) edge node[above] {$4 / 7$} (B);
+	\path (A) edge node[above] {$0 / 6$} (C);
+	\path (B) edge node[left] {$0 / 1$} (C);
+	\path (B) edge node[above] {$4 / 4$} (D);
+	\path (E) edge node[right] {$0 /  5$} (B);
+	\path (C) edge node[above] {$0 / 9$} (E);
+	\path (E) edge node[right] {$0 / 3$} (D);
+	\path (D) edge node[above] {$4 / 10$} (F);
+	\path (E) edge node[above] {$0 / 2$} (F);
+	
+	\end{tikzpicture}  
+\end{center}
+\end{proof}
+
+
+
+
+\newpage
+\subsection{Problem 3\ref{3b}}
+\item \label{3b} Find a flow-augmenting path using the updated flow configuration from part (a). Then do the following: (i) clearly identify both the flow-augmenting path and the maximum amount of flow that can be pushed through said path; and then (ii) push as much flow through the flow-augmenting path and draw the updated flow network below.
+\begin{proof}[Answer] $ $ \\
+Flow-augmenting path: $s \to C \to E \to t$ \\
+Maximum amount that can be pushed: 2
+\begin{center}
+	\begin {tikzpicture}[-latex ,auto ,node distance =2 cm and 3cm ,on grid ,
+	semithick ,
+	state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+	draw,processblue , text=blue , minimum width =1 cm}]
+
+	\node[state] (A) {$s$};
+	\node[state] (B) [above right = of A] {$B$};
+	\node[state] (C) [below right = of A] {$C$};
+	\node[state] (D) [right = of B] {$D$};
+	\node[state] (E) [right = of C] {$E$};
+	\node[state] (F) [below right = of D] {$t$};
+	
+	\path (A) edge node[above] {$4 / 7$} (B);
+	\path (A) edge node[above] {$2 / 6$} (C);
+	\path (B) edge node[left] {$0 / 1$} (C);
+	\path (B) edge node[above] {$4 / 4$} (D);
+	\path (E) edge node[right] {$0 /  5$} (B);
+	\path (C) edge node[above] {$2 / 9$} (E);
+	\path (E) edge node[right] {$0 / 3$} (D);
+	\path (D) edge node[above] {$4 / 10$} (F);
+	\path (E) edge node[above] {$2 / 2$} (F);
+	
+	\end{tikzpicture}  
+\end{center}
+\end{proof}
+
+
+
+\newpage
+\subsection{Problem 3\ref{3c}}
+\item \label{3c} Find a flow-augmenting path using the updated flow configuration from part (b). Then do the following: (i) clearly identify both the flow-augmenting path and the maximum amount of flow that can be pushed through said path; and then (ii) push as much flow through the flow-augmenting path and draw the updated flow network below.
+\begin{proof}[Answer] $ $ \\
+Flow-augmenting path: $s \to C \to E \to D \to t$ \\
+Maximum amount that can be pushed: 3
+\begin{center}
+	\begin {tikzpicture}[-latex ,auto ,node distance =2 cm and 3cm ,on grid ,
+	semithick ,
+	state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+	draw,processblue , text=blue , minimum width =1 cm}]
+
+	\node[state] (A) {$s$};
+	\node[state] (B) [above right = of A] {$B$};
+	\node[state] (C) [below right = of A] {$C$};
+	\node[state] (D) [right = of B] {$D$};
+	\node[state] (E) [right = of C] {$E$};
+	\node[state] (F) [below right = of D] {$t$};
+	
+	\path (A) edge node[above] {$4 / 7$} (B);
+	\path (A) edge node[above] {$5 / 6$} (C);
+	\path (B) edge node[left] {$0 / 1$} (C);
+	\path (B) edge node[above] {$4 / 4$} (D);
+	\path (E) edge node[right] {$0 /  5$} (B);
+	\path (C) edge node[above] {$5 / 9$} (E);
+	\path (E) edge node[right] {$3 / 3$} (D);
+	\path (D) edge node[above] {$7 / 10$} (F);
+	\path (E) edge node[above] {$2 / 2$} (F);
+	
+	\end{tikzpicture}  
+\end{center}
+\end{proof}
+
+
+
+\newpage
+\subsection{Problem 3\ref{3d}}
+\item \label{3d} Using the flow configuration from part (\ref{3c}), finish executing the Ford--Fulkerson algorithm. Include the following here: (i) your flow network, reflecting the maximum-valued flow configuration you found, and (ii) the corresponding minimum capacity cut. There may be multiple minimum capacity cuts, but you should identify the one corresponding to your maximum-valued flow configuration. Then (iii) finally, compare the value of your flow to the capacity of the cut. \\
+
+\noindent \textbf{Note:} You do \textbf{not} need to include the remaining steps of the Ford--Fulkerson algorithm. We will not check these steps when grading.
+\begin{proof}[Answer] $ $ \\
+\textbf{Minimum Capacity Cut} \\
+Partition S: s,B,C,E \\
+Partition T: t,D \\
+Total weight of all edges from S to T: 9 \\
+The value of the max flow from s to t is 9, which is also the value of the min cut. 
+\begin{center}
+	\begin {tikzpicture}[-latex ,auto ,node distance =2 cm and 3cm ,on grid ,
+	semithick ,
+	state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+	draw,processblue , text=blue , minimum width =1 cm}]
+
+	\node[state] (A) {$s$};
+	\node[state] (B) [above right = of A] {$B$};
+	\node[state] (C) [below right = of A] {$C$};
+	\node[state] (D) [right = of B] {$D$};
+	\node[state] (E) [right = of C] {$E$};
+	\node[state] (F) [below right = of D] {$t$};
+	
+	\path (A) edge node[above] {$4 / 7$} (B);
+	\path (A) edge node[above] {$5 / 6$} (C);
+	\path (B) edge node[left] {$0 / 1$} (C);
+	\path (B) edge node[above] {$4 / 4$} (D);
+	\path (E) edge node[right] {$0 /  5$} (B);
+	\path (C) edge node[above] {$5 / 9$} (E);
+	\path (E) edge node[right] {$3 / 3$} (D);
+	\path (D) edge node[above] {$7 / 10$} (F);
+	\path (E) edge node[above] {$2 / 2$} (F);
+	
+	\end{tikzpicture}  
+\end{center}
+\end{proof}
+
+\end{enumerate}
+\end{required}
+
+
+
+\newpage
+\section{Standard 11- Network Flows: Reductions and Applications}
+
+
+\subsection{Problem \ref{S11Problem3}}
+\begin{required} \label{S11Problem3}
+In this problem, we reduce the \textsf{Maximum Flow} problem where multiple sources and sinks are allowed to the \textsf{One-Source, One-Sink Maximum Flow} problem. The reduction is as follows. Let $\mathcal{N}(G, c, S, T)$ be our flow network with multiple sources and multiple sinks. We construct a new flow network $\mathcal{N}^{\prime}(H, c^{\prime}, S^{\prime}, T^{\prime})$, as follows.
+\begin{itemize}
+\item $S^{\prime} = \{s^{\prime}\}$ is the set containing our one source.
+
+\item $T^{\prime} = \{ t^{\prime}\}$ is the set containing our one sink.
+
+\item We now construct $H$ by starting with $G$ (including precisely the vertices and edges of $G$) and adding $s^{\prime}$ and $t^{\prime}$. For each source $s \in S$ of $G$, we add a directed edge $(s^{\prime}, s)$ (that is, $s^{\prime} \to s$) in $H$. For each sink $t \in T$ of $G$, we add a directed edge $(t, t^{\prime})$ (that is, $t \to t^{\prime})$ in $H$.
+
+\item We construct the capacity function $c^{\prime}$ of $H$ as follows.
+\begin{itemize}
+\item If $(u, v)$ corresponds to an edge of $G$, then $c^{\prime}(u, v) = c(u, v)$.
+\item If $s \in S$ is a source of $G$, then $c^{\prime}(s^{\prime}, s)$ is the amount of flow that we can push from $s$ in $G$. That is:
+\[
+c(s^{\prime}, s) = \sum_{(s, v) \in E(G)} c(s, v).
+\]
+
+\item If $t \in T$ is a sink of $G$, then $c^{\prime}(t, t^{\prime})$ is the maximum amount of flow that $t$ can receive along its incoming edges in $G$. That is:
+\[
+c^{\prime}(t, t^{\prime}) = \sum_{(v, t) \in E(G)} c(v, t).
+\]
+\end{itemize}
+\end{itemize}
+
+
+\noindent \\ Do the following. [\textbf{Hint:} Before attempting either part (a) or part (b), we highly recommend doing the following scratch work first. Construct your own flow network with multiple sources and multiple sinks. Then go through the above construction carefully to obtain a new flow network with one source and one sink. Trying to construct your own examples is extremely beneficial when working to understand a new construction.]
+
+\begin{enumerate}[label=(\alph*)]
+\subsubsection{Problem 5\ref{S113a}}
+\item \label{S113a} Show that, for every feasible flow $f$ on $\mathcal{N}$, there exists a (corresponding) feasible flow $f^{\prime}$ on $\mathcal{N}^{\prime}$ such that $\text{val}(f) = \text{val}(f^{\prime})$. 
+
+\begin{proof} $ $ \\
+The feasible of flow of a network is defined as how much stuff can flow from the source(s) to the sink(s). The two conditions are: (1) the capacities of the edges cannot be exceeded and (2) the amount of flow entering a vertex must be the same as the amount exiting (all vertices other than s,t). In this reduction algorithm, we essentially take all the sources and sinks and make them into ordinary vertices while adding an additional source and sink. Following the net flow constraint condition, the amount of flow entering the previous sources from the new source is the amount exiting them. Therefore, there is nowhere for flow to be lost or gained. Additionally, the amount exiting the previous sinks into the new sink is the same amount of flow that is entering them, once again showing that flow cannot be lost or gained. Since no flow is gained or lost by adding the new source and sink, and the middle of the network is unchanged (and still follows the 2 conditions) then it follows that the flow of the entire network stays unchanged and $\text{val}(f) = \text{val}(f^{\prime})$.
+
+
+\end{proof}
+
+
+
+\newpage
+\subsubsection{Problem 5\ref{S113b}}
+\item \label{S113b} For every feasible flow $g^\prime$ on $\mathcal{N}^{\prime}$, show how to recover a feasible flow $g$ on $\mathcal{N}$ such that $\text{val}(g) = \text{val}(g^{\prime})$. 
+
+\begin{proof} $ $ \\ 
+No output transformation is needed for this reduction problem. As shown in part (a), $\text{val}(g)$ is already equivalent to $\text{val}(g^{\prime})$ because flow is not added or lost in the reduction process.
+\end{proof}
+\end{enumerate}
+\end{required}
+
+
+
+
+\newpage
+\subsection{Problem 6}
+\begin{required}
+Suppose a restaurant has $3$ customers, each of whom can order at most one entree. The restaurant is running low on inventory. It has the following in stock:
+\begin{itemize}
+\item Two burgers,
+\item Three servings of crab cakes, and
+\item One salmon filet.
+\end{itemize} 
+
+\noindent Each customer submits their order, indicating only whether they will eat a given meal. \textbf{Of the meals a given customer is willing to eat, that customers does NOT indicate whether they prefer one meal to another.} The restaurant wishes to assign entrees in such a way that respects whether the customers will eat their entrees and maximizes the number of entrees sold. \\
+
+\noindent Do the following.
+\begin{enumerate}[label=(\alph*)]
+\subsubsection{Problem 6\ref{S114a}}
+\item \label{S114a} Carefully describe how to construct a flow network corresponding to the customers' order preferences. That is, we take as input the customers' order preferences, and you need to describe how to construct the corresponding flow network. \\
+
+\noindent Note that you just have to give a construction. You are \textbf{not} being asked to prove anything about your construction.
+
+\begin{proof}[Answer] $ $ \\ 
+\begin{enumerate}
+    \item Start with a source vertex: $E$ which represents the total number of entrees.
+    \item $E$ branches into each specific entree. In this example, there are three new vertices $E_b, E_c$, and $E_s$
+    \item The capacities of edges leaving $E$ correspond to how much of each entree the restaurant has in stock. $c(E,E_b)=2$, $c(E,E_c)=3$, and $c(E,E_s)=1$
+    \item Next there is a vertex corresponding to each customer: $C_1,C_2 ... C_n$
+    \item There is an edge connecting a specific entree to a customer only if the customer has indicated they will eat it. Each edge will only have a capacity of 1 since a customer cannot have more than 1 of an entree.
+    \item Finally, all of the customer vertices flow into a single vertex, $C$ that represents the total number of customers. The flow from each customer to $C$ is also 1. 
+\end{enumerate}
+\end{proof}
+
+
+\newpage 
+\subsubsection{Problem 6\ref{S114b}}
+\item \label{S114b} Suppose that the three customers provide their orders:
+\begin{itemize}
+\item Customer 1: Crab cakes, Burger. [Note: Customer 1 will not eat Salmon]
+\item Customer 2: Salmon, Burger, Crab cakes.
+\item Customer 3: Salmon, Crab cakes, Burger.
+\end{itemize}
+
+\noindent Using your construction from part \ref{S114a}, find a maximum-valued flow on your flow network and identify the corresponding allocation of entrees to customers. You may hand-draw your flow network, but the explanation must be typed.
+
+\begin{proof}[Answer]
+\begin{enumerate}
+    \item Create entree vertices: $E,E_b,E_c,E_s$
+    \item Connect $E$ to $E_b,E_c,E_s$ with edges 0/2, 0/3, and 0/1, respectively. 
+    \item Create customer vertices: $C,C_1,C_2,C_3$
+    \item Connect $C_1,C_2,C_3$ to $C$ with each edge being 0/1.
+    \item Connect $E_b,E_c,E_s$ to $C_1,C_2,C_3$ only if if the entree corresponds to the customers order. Each edge is 0/1.
+    \item Perform Ford-Fulkerson to obtain the max flow. Note: there are multiple possible max flow configurations for this example. 
+    \begin{enumerate}
+        \item Push 1 entree along the path $E,E_b,C_1,C$
+        \item Push 1 entree along the path $E,E_c,C_2,C$
+        \item Push 1 entree along the path $E,E_c,C_3,C$
+        \item No more entrees can be pushed. 
+    \end{enumerate}
+    \item Final edges:
+        \begin{enumerate}
+            \item $f(C_1,C)$ = 1/1 $f(C_2,C)$ = 1/1 $f(C_3,C)$ = 1/1 (Customer vertices to total customer vertex) 
+            \item $f(E, E_b)$ = 1/2 $f(E,E_c)$ = 2/3 $f(E,E_s)$ = 0/1 (Total entree vertex to specific entree vertices)
+            \item $f(E_c, C_1)$ = 1/1 (customer 1) 
+            \item $f(E_c, C_2)$ = 1/1 (customer 2) 
+            \item $f(E_b, C_3)$ = 1/1 (customer 3) 
+            \item all other edges have a flow of 0 
+            \item Max flow: 3
+        \end{enumerate}
+        Customer 1 gets a burger, customer 2 and 3 both get crab cakes. Total of 3 entrees sold by the restaurant. 
+\end{enumerate}
+
+
+
+
+
+%Include an Image: \includegraphics{ImageFileName}
+%Include an Image and Rotate 90 degree: \includegraphics[angle=90]{ImageFileName}
+%Include an Image, Rotate by 180 degrees, and scale by 50\% \includegraphics[scale=0.5, angle=90]{ImageFileName}
+\end{proof}
+
+\end{enumerate}
+\end{required}
+\end{document} % NOTHING AFTER THIS LINE IS PART OF THE DOCUMENT
+
+
+
